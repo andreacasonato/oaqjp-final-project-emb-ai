@@ -1,10 +1,23 @@
+"""
+Flask web application that exposes the emotion detection function as
+a web service and serves the front end used to test it.
+"""
+
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
 app = Flask("Emotion Detector")
 
+
 @app.route("/emotionDetector")
 def emot_detector():
+    """
+    Handle GET requests to /emotionDetector.
+
+    Reads the 'textToAnalyze' query parameter, runs emotion detection
+    on it, and returns a formatted response string. If the input text
+    is blank, returns an error message instead.
+    """
     text_to_analyze = request.args.get('textToAnalyze')
     response = emotion_detector(text_to_analyze)
 
@@ -18,9 +31,12 @@ def emot_detector():
         f"The dominant emotion is {response['dominant_emotion']}."
     )
 
+
 @app.route("/")
 def render_index_page():
+    """Render the main index page of the application."""
     return render_template('index.html')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
